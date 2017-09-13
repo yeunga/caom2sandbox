@@ -226,7 +226,7 @@ public class MetaIntTest
             
             String xmlns = obs.getString("@xmlns:caom2");
             Assert.assertNotNull(xmlns);
-            Assert.assertEquals("vos://cadc.nrc.ca!vospace/CADC/xml/CAOM/v2.2", xmlns);
+            Assert.assertEquals("http://www.opencadc.org/caom2/xml/v2.3", xmlns);
             
             String otype = obs.getString("@xsi:type");
             Assert.assertNotNull(otype);

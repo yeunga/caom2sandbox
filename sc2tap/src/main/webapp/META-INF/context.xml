@@ -5,7 +5,7 @@
 
     <!-- development server -->
     <ResourceLink name="jdbc/uws"
-        global="jdbc/sandbox-uws"
+        global="jdbc/sandbox-tapadm"
         type="javax.sql.DataSource" />
         
     <ResourceLink name="jdbc/tapuser"
@@ -13,7 +13,7 @@
         type="javax.sql.DataSource" />
 
     <ResourceLink name="jdbc/tapuploadadm"
-        global="jdbc/sandbox-tapupload"
+        global="jdbc/sandbox-tapuser"
         type="javax.sql.DataSource" />
     
 </Context>
