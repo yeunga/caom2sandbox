@@ -166,7 +166,6 @@ public class LinksTest
             Assert.assertNotNull("non-null response", resp);
             Assert.assertFalse("non-empty response", resp.isEmpty());
             String[] lines = resp.split("\n");
-            //Assert.assertEquals("number of lines", 1, lines.length);
             String[] parts = lines[0].split("\t");
             Assert.assertEquals("number of tokens", 2, parts.length);
             Assert.assertEquals("OK", parts[0]);
@@ -237,32 +236,7 @@ public class LinksTest
             Assert.assertNotNull("GET VOTable TableData should not be null", getTableData);
             Iterator<List<Object>> iter = getTableData.iterator();
             Integer[] fields = TestUtil.getFieldIndexes(getFields);
-            /*boolean foundThis = false;
-            boolean foundCutout = false;
-            while ( iter.hasNext() )
-            {
-                List<Object> row = iter.next();
-                Object oid = row.get(fields[0]);
-                Object ourl = row.get(fields[1]);
-                Object odef = row.get(fields[2]);
-                Object oerr = row.get(fields[7]);
-                Object osem = row.get(fields[4]);
-                Assert.assertNull("expect null error_message", oerr);
-                Assert.assertEquals(uri, oid);
-                if (ourl != null)
-                {
-                    Assert.assertEquals("#this", osem);
-                    foundThis = true;
-                }
-                else if (odef != null)
-                {
-                    Assert.assertEquals("#cutout", osem);
-                    foundCutout = true;
-                }
-            }
-            Assert.assertTrue("found #this", foundThis);
-            Assert.assertTrue("found #cutout", foundCutout);
-            */
+
             // POST the parameters.
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("REQUEST", "getLinks");
