@@ -28,7 +28,7 @@
     </interface>
     <interface xsi:type="vs:ParamHTTP" role="std" version="1.1">
       <accessURL use="base">http://replace.me.com/sc2tap/auth-tables</accessURL>
-      <securityMethod standardID="http://www.w3.org/Protocols/HTTP/1.0/spec.html#BasicAA"/>
+      <securityMethod standardID="ivo://ivoa.net/sso#BasicAA"/>
     </interface>
     <interface xsi:type="vs:ParamHTTP" role="std" version="1.1">
       <accessURL use="base">http://replace.me.com/sc2tap/tables</accessURL>

@@ -3,7 +3,7 @@
 *******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 **************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 *
-*  (c) 2011.                            (c) 2011.
+*  (c) 2017.                            (c) 2017.
 *  Government of Canada                 Gouvernement du Canada
 *  National Research Council            Conseil national de recherches
 *  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -109,11 +109,9 @@ public class ServiceAvailabilityImpl implements WebService
         {
             // test the TAP service
             RegistryClient regClient = new RegistryClient();
-            URL serviceURL = regClient.getServiceURL(URI.create(TAP_URI), Standards.TAP_10, AuthMethod.ANON);
-            URL tapAvailURL = new URL(serviceURL.toExternalForm() + "/availability");
+            URL tapAvailURL = regClient.getServiceURL(URI.create(TAP_URI), Standards.VOSI_AVAILABILITY, AuthMethod.ANON);
 
-            CheckWebService checkWebService = null;
-            checkWebService = new CheckWebService(tapAvailURL.toExternalForm());
+            CheckWebService checkWebService = new CheckWebService(tapAvailURL.toExternalForm());
             checkWebService.check();
 
             CheckResource cr = AuthenticatorImpl.getAvailabilityCheck();
