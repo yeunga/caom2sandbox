@@ -31,6 +31,11 @@
       <accessURL use="base">http://replace.me.com/sc2repo/auth-observations</accessURL>
       <securityMethod standardID="ivo://ivoa.net/sso#BasicAA"/>
     </interface>
+      <!-- compat -->
+    <interface xsi:type="vs:ParamHTTP" role="std">
+      <accessURL use="base">http://replace.me.com/sc2repo/auth-observations</accessURL>
+      <securityMethod standardID="ivo://www.w3c.org/Protocols/HTTP/1.0/spec.html#BasicAA"/>
+    </interface>
     <interface xsi:type="vs:ParamHTTP" role="std">
       <accessURL use="base">http://replace.me.com/sc2repo/observations</accessURL>
       <securityMethod standardID="ivo://ivoa.net/sso#cookie"/>
