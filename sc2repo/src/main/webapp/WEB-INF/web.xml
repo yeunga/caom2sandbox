@@ -53,7 +53,17 @@
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
-
+    
+    <servlet>
+        <servlet-name>DeletionsServlet</servlet-name>
+        <servlet-class>ca.nrc.cadc.rest.RestServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+        <init-param>
+            <param-name>get</param-name>
+            <param-value>ca.nrc.cadc.caom2.repo.action.GetDeletedAction</param-value>
+        </init-param>
+    </servlet>
+    
     <servlet>
         <load-on-startup>3</load-on-startup>
         <servlet-name>AvailabilityServlet</servlet-name>
@@ -102,6 +112,16 @@
         <url-pattern>/auth-observations/*</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>DeletionsServlet</servlet-name>
+        <url-pattern>/deletions/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>DeletionsServlet</servlet-name>
+        <url-pattern>/auth-deletions/*</url-pattern>
+    </servlet-mapping>
+    
     <!-- security constraints -->
     
     <security-role>
@@ -114,6 +134,7 @@
             <web-resource-name>auth</web-resource-name>
             <description/>
             <url-pattern>/auth-observations/*</url-pattern>
+            <url-pattern>/auth-deletions/*</url-pattern>
             <url-pattern>/logControl/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
