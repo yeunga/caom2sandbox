@@ -141,7 +141,7 @@ public class VosiTablesTest
         try
         {
             TableReader tr = new TableReader(true);
-            String s = tablesURL.toExternalForm() + "/TAP_SCHEMA.tables";
+            String s = tablesURL.toExternalForm() + "/tap_schema.tables";
             log.info("testValidateTableDoc: " + s);
             
             URL url = new URL(s);
@@ -154,7 +154,7 @@ public class VosiTablesTest
             
             TableDesc td = tr.read(new ByteArrayInputStream(bos.toByteArray()));
             Assert.assertNotNull(td);
-            Assert.assertEquals("TAP_SCHEMA.tables", td.getTableName());
+            Assert.assertEquals("tap_schema.tables", td.getTableName());
         }
         catch(Exception unexpected)
         {

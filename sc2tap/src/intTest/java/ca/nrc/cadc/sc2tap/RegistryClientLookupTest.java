@@ -221,7 +221,8 @@ public class RegistryClientLookupTest
         }
     }
     
-    @Test
+    // not currently deployed
+    //@Test
     public void testAuthTables()
     {
         try
