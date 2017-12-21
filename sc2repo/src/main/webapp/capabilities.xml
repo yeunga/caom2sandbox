@@ -46,5 +46,22 @@
     </interface>
   </capability>
   
+  <capability standardID="vos://cadc.nrc.ca~vospace/CADC/std/CAOM2Repository#del-1.0">
+    <interface xsi:type="vs:ParamHTTP" role="std">
+      <accessURL use="base">http://replace.me.com/sc2repo/deletions</accessURL>
+    </interface>
+    <interface xsi:type="vs:ParamHTTP" role="std">
+      <accessURL use="base">http://replace.me.com/sc2repo/auth-deletions</accessURL>
+      <securityMethod standardID="ivo://ivoa.net/sso#BasicAA"/>
+    </interface>
+    <interface xsi:type="vs:ParamHTTP" role="std">
+      <accessURL use="base">http://replace.me.com/sc2repo/deletions</accessURL>
+      <securityMethod standardID="ivo://ivoa.net/sso#cookie"/>
+    </interface>
+    <interface xsi:type="vs:ParamHTTP" role="std">
+      <accessURL use="base">https://replace.me.com/sc2repo/deletions</accessURL>
+      <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate"/>
+    </interface>
+  </capability>
 </vosi:capabilities>
 
