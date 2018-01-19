@@ -106,6 +106,7 @@ public class RegistryClientLookupTest
     static
     {
         Log4jInit.setLevel("ca.nrc.cadc.tap.integration", Level.INFO);
+        log.info("classpath: " + System.getProperty("java.class.path"));
         File cf = FileUtil.getFileFromResource("x509_CADCRegtest1.pem", RegistryClientLookupTest.class);
         subject = SSLUtil.createSubject(cf);
         
