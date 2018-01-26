@@ -127,7 +127,11 @@ public class RegistryClientLookupTest
     {
         try
         {
-            URL url = REG_CLIENT.getServiceURL(TAP_RESOUCE_IDENTIFIER_URI, Standards.TAP_ASYNC_11, AuthMethod.ANON);
+            URL url = REG_CLIENT.getServiceURL(
+                TAP_RESOUCE_IDENTIFIER_URI,
+                Standards.TAP_10,
+                AuthMethod.ANON,
+                Standards.INTERFACE_UWS_ASYNC);
             Assert.assertNotNull(url);
             
             HttpPost post = new HttpPost(url, queryParams, false);
@@ -148,7 +152,11 @@ public class RegistryClientLookupTest
     {
         try
         {
-            URL url = REG_CLIENT.getServiceURL(TAP_RESOUCE_IDENTIFIER_URI, Standards.TAP_SYNC_11, AuthMethod.ANON);
+            URL url = REG_CLIENT.getServiceURL(
+                TAP_RESOUCE_IDENTIFIER_URI,
+                Standards.TAP_10,
+                AuthMethod.ANON,
+                Standards.INTERFACE_UWS_SYNC);
             Assert.assertNotNull(url);
             HttpPost post = new HttpPost(url, queryParams, false);
             post.run();
@@ -189,7 +197,11 @@ public class RegistryClientLookupTest
     {
         try
         {
-            URL url = REG_CLIENT.getServiceURL(TAP_RESOUCE_IDENTIFIER_URI, Standards.TAP_ASYNC_11, AuthMethod.PASSWORD);
+            URL url = REG_CLIENT.getServiceURL(
+                TAP_RESOUCE_IDENTIFIER_URI,
+                Standards.TAP_10,
+                AuthMethod.PASSWORD,
+                Standards.INTERFACE_UWS_ASYNC);
             Assert.assertNotNull(url);
             HttpPost post = new HttpPost(url, queryParams, false);
             post.run();
@@ -208,7 +220,11 @@ public class RegistryClientLookupTest
     {
         try
         {
-            URL url = REG_CLIENT.getServiceURL(TAP_RESOUCE_IDENTIFIER_URI, Standards.TAP_SYNC_11, AuthMethod.PASSWORD);
+            URL url = REG_CLIENT.getServiceURL(
+                TAP_RESOUCE_IDENTIFIER_URI,
+                Standards.TAP_10,
+                AuthMethod.PASSWORD,
+                Standards.INTERFACE_UWS_SYNC);
             Assert.assertNotNull(url);
             HttpPost post = new HttpPost(url, queryParams, false);
             post.run();
@@ -249,7 +265,11 @@ public class RegistryClientLookupTest
     {
         try
         {
-            URL url = REG_CLIENT.getServiceURL(TAP_RESOUCE_IDENTIFIER_URI, Standards.TAP_ASYNC_11, AuthMethod.CERT);
+            URL url = REG_CLIENT.getServiceURL(
+                TAP_RESOUCE_IDENTIFIER_URI,
+                Standards.TAP_10,
+                AuthMethod.CERT,
+                Standards.INTERFACE_UWS_ASYNC);
             Assert.assertNotNull(url);
             HttpPost post = new HttpPost(url, queryParams, false);
             Subject.doAs(subject, new RunnableAction(post));
@@ -270,7 +290,11 @@ public class RegistryClientLookupTest
     {
         try
         {
-            URL url = REG_CLIENT.getServiceURL(TAP_RESOUCE_IDENTIFIER_URI, Standards.TAP_SYNC_11, AuthMethod.CERT, Standards.INTERFACE_UWS_SYNC);
+            URL url = REG_CLIENT.getServiceURL(
+                TAP_RESOUCE_IDENTIFIER_URI,
+                Standards.TAP_10,
+                AuthMethod.CERT,
+                Standards.INTERFACE_UWS_SYNC);
             Assert.assertNotNull(url);
             HttpPost post = new HttpPost(url, queryParams, false);
             Subject.doAs(subject, new RunnableAction(post));
