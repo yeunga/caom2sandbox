@@ -123,6 +123,32 @@ public class RegistryClientLookupTest
     }
 
     @Test
+    public void testAnonBase()
+    {
+        try
+        {
+            URL url = REG_CLIENT.getServiceURL(
+                TAP_RESOUCE_IDENTIFIER_URI,
+                Standards.TAP_10,
+                AuthMethod.ANON,
+                Standards.INTERFACE_PARAM_HTTP);
+            Assert.assertNotNull(url);
+            url = new URL(url.toExternalForm() + "/async"); // manually append required endpoint in TAP-1.0 style
+            
+            HttpPost post = new HttpPost(url, queryParams, false);
+            post.run();
+            Assert.assertNull(post.getThrowable());
+            Assert.assertEquals(303, post.getResponseCode());
+            Assert.assertNotNull(post.getRedirectURL());
+        }
+        catch(Exception unexpected)
+        {
+            log.error("unexpected exception", unexpected);
+            Assert.fail("unexpected exception: " + unexpected);
+        }
+    }
+    
+    @Test
     public void testAnonAsync()
     {
         try
