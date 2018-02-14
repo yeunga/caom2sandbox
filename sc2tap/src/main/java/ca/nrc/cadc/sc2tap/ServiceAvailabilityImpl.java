@@ -63,10 +63,9 @@
 *                                       <http://www.gnu.org/licenses/>.
 *
 ************************************************************************
-*/
+ */
 
 package ca.nrc.cadc.sc2tap;
-
 
 import ca.nrc.cadc.auth.ACIdentityManager;
 import ca.nrc.cadc.auth.AuthMethod;
@@ -90,22 +89,21 @@ import org.apache.log4j.Logger;
  *
  * @author pdowler
  */
-public class ServiceAvailabilityImpl implements WebService
-{
+public class ServiceAvailabilityImpl implements WebService {
+
     private static final Logger log = Logger.getLogger(ServiceAvailabilityImpl.class);
 
     private String UWSDS_TEST = "select jobID from uws.Job limit 1";
-    private String TAPDS_TEST = "select schema_name from tap_schema.schemas where schema_name='caom2'";
-    
-    public ServiceAvailabilityImpl() { }
+    private String TAPDS_TEST = "select schema_name from tap_schema.schemas11 where schema_name='caom2'";
+
+    public ServiceAvailabilityImpl() {
+    }
 
     @Override
-    public AvailabilityStatus getStatus()
-    {
+    public AvailabilityStatus getStatus() {
         boolean isGood = true;
         String note = "service is accepting queries";
-        try
-        {
+        try {
             CheckResource cr;
 
             cr = AuthenticatorImpl.getAvailabilityCheck();
@@ -133,19 +131,15 @@ public class ServiceAvailabilityImpl implements WebService
             checkCert.check();
 
             RegistryClient reg = new RegistryClient();
-            String vos = reg.getServiceURL(URI.create("ivo://cadc.nrc.ca/vospace"), 
+            String vos = reg.getServiceURL(URI.create("ivo://cadc.nrc.ca/vospace"),
                     Standards.VOSI_AVAILABILITY, AuthMethod.ANON).toExternalForm();
             CheckWebService cws = new CheckWebService(vos);
             cws.check();
-        }
-        catch(CheckException ce)
-        {
+        } catch (CheckException ce) {
             // tests determined that the resource is not working
             isGood = false;
             note = ce.getMessage();
-        }
-        catch (Throwable t)
-        {
+        } catch (Throwable t) {
             // the test itself failed
             log.error("test failed", t);
             isGood = false;
@@ -154,8 +148,7 @@ public class ServiceAvailabilityImpl implements WebService
         return new AvailabilityStatus(isGood, null, null, null, note);
     }
 
-    private String[] getTapUploadTest()
-    {
+    private String[] getTapUploadTest() {
         String id = new RandomStringGenerator(16).getID();
         String name = "tap_upload.avail_" + id;
         StringBuilder sb = new StringBuilder();
@@ -163,18 +156,17 @@ public class ServiceAvailabilityImpl implements WebService
         sb.append("c char(1), i integer, d double precision");
         sb.append(")");
         String drop = getTapUploadCleanup(name);
-        return new String[] { sb.toString(), drop };
+        return new String[]{sb.toString(), drop};
     }
-    private String getTapUploadCleanup(String name)
-    {
+
+    private String getTapUploadCleanup(String name) {
         StringBuilder sb = new StringBuilder();
         sb.append("DROP TABLE ").append(name);
         return sb.toString();
     }
 
     @Override
-    public void setState(String string)
-    {
+    public void setState(String string) {
         // no-op
     }
 }
