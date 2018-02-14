@@ -70,9 +70,15 @@
 package ca.nrc.cadc.sc2tap;
 
 
+import ca.nrc.cadc.auth.AuthMethod;
+import ca.nrc.cadc.reg.Capabilities;
+import ca.nrc.cadc.reg.Capability;
+import ca.nrc.cadc.reg.Interface;
+import ca.nrc.cadc.reg.Standards;
 import ca.nrc.cadc.vosi.CapabilitiesTest;
 import java.net.URI;
 import org.apache.log4j.Logger;
+import org.junit.Assert;
 
 /**
  *
@@ -85,5 +91,27 @@ public class VosiCapabilitiesTest extends CapabilitiesTest
     public VosiCapabilitiesTest() 
     { 
         super(URI.create("ivo://cadc.nrc.ca/sc2tap"));
+    }
+    
+    @Override
+    protected void validateContent(Capabilities caps) throws Exception {
+        super.validateContent(caps);
+        
+        // TAP-1.1
+        Capability tap = caps.findCapability(Standards.TAP_10);
+        Interface base = tap.findInterface(AuthMethod.ANON, Standards.INTERFACE_PARAM_HTTP);
+        Assert.assertNotNull("base", base);
+        Assert.assertTrue("anon base", Standards.SECURITY_METHOD_ANON.equals(base.getSecurityMethod()));
+        
+        // interfaces that should be present
+        Assert.assertNotNull("anon async", tap.findInterface(Standards.SECURITY_METHOD_ANON, Standards.INTERFACE_UWS_ASYNC));
+        Assert.assertNotNull("cert async", tap.findInterface(Standards.SECURITY_METHOD_CERT, Standards.INTERFACE_UWS_ASYNC));
+        Assert.assertNotNull("cookie async", tap.findInterface(Standards.SECURITY_METHOD_COOKIE, Standards.INTERFACE_UWS_ASYNC));
+        Assert.assertNotNull("password async", tap.findInterface(Standards.SECURITY_METHOD_HTTP_BASIC, Standards.INTERFACE_UWS_ASYNC));
+        
+        Assert.assertNotNull("anon sync", tap.findInterface(Standards.SECURITY_METHOD_ANON, Standards.INTERFACE_UWS_SYNC));
+        Assert.assertNotNull("cert sync", tap.findInterface(Standards.SECURITY_METHOD_CERT, Standards.INTERFACE_UWS_SYNC));
+        Assert.assertNotNull("cookie sync", tap.findInterface(Standards.SECURITY_METHOD_COOKIE, Standards.INTERFACE_UWS_SYNC));
+        Assert.assertNotNull("password sync", tap.findInterface(Standards.SECURITY_METHOD_HTTP_BASIC, Standards.INTERFACE_UWS_SYNC));
     }
 }
