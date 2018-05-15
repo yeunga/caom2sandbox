@@ -65,16 +65,16 @@
 *  $Revision: 5 $
 *
 ************************************************************************
-*/
+ */
 
 package ca.nrc.cadc.sc2repo;
 
 import ca.nrc.cadc.auth.AuthenticationUtil;
 import ca.nrc.cadc.auth.AuthenticatorImpl;
 import ca.nrc.cadc.caom2.repo.CaomRepoConfig;
-import ca.nrc.cadc.caom2.repo.action.RepoAction;
+import ca.nrc.cadc.rest.RestAction;
+import ca.nrc.cadc.vosi.AvailabilityPlugin;
 import ca.nrc.cadc.vosi.AvailabilityStatus;
-import ca.nrc.cadc.vosi.WebService;
 import ca.nrc.cadc.vosi.avail.CheckDataSource;
 import ca.nrc.cadc.vosi.avail.CheckException;
 import ca.nrc.cadc.vosi.avail.CheckResource;
@@ -88,77 +88,75 @@ import javax.security.auth.x500.X500Principal;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * VOSI-Availability plugin.
+ * 
  * @author pdowler
  */
-public class ServiceAvailabilityImpl implements WebService
-{
+public class ServiceAvailabilityImpl implements AvailabilityPlugin {
+
     private static final Logger log = Logger.getLogger(ServiceAvailabilityImpl.class);
-    
+
     // TODO: this should be configured someplace
     private static final Principal TRUSTED = new X500Principal("cn=servops_4a2,ou=cadc,o=hia,c=ca");
 
-    public ServiceAvailabilityImpl() { }
+    private String appName;
 
-    public AvailabilityStatus getStatus()
-    {
+    public ServiceAvailabilityImpl() {
+    }
+
+    @Override
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public AvailabilityStatus getStatus() {
         boolean isGood = true;
         String note = "service is accepting queries";
 
-        try
-        {
+        try {
             String state = getState();
-            if (RepoAction.OFFLINE.equals(state))
-                return new AvailabilityStatus(false, null, null, null, RepoAction.OFFLINE_MSG);
-            if (RepoAction.READ_ONLY.equals(state))
-                return new AvailabilityStatus(false, null, null, null, RepoAction.READ_ONLY_MSG);
+            if (RestAction.STATE_OFFLINE.equals(state)) {
+                return new AvailabilityStatus(false, null, null, null, RestAction.STATE_OFFLINE_MSG);
+            }
+            if (RestAction.STATE_READ_ONLY.equals(state)) {
+                return new AvailabilityStatus(false, null, null, null, RestAction.STATE_READ_ONLY_MSG);
+            }
 
             // ReadWrite: proceed with live checks
-            
             CheckResource cr = AuthenticatorImpl.getAvailabilityCheck();
             cr.check();
-            
+
             // TODO: check that GMS service(s) referenced in config are available
-            
-            File config = new File(System.getProperty("user.home") + "/config/sc2repo.properties");
+            File config = new File(System.getProperty("user.home") + "/config/" + appName + ".properties");
             CaomRepoConfig rc = new CaomRepoConfig(config);
-            
-            if (rc.isEmpty())
+
+            if (rc.isEmpty()) {
                 throw new IllegalStateException("no CaomRepoConfig.Item(s) found in " + config);
+            }
 
             Iterator<CaomRepoConfig.Item> i = rc.iterator();
-            while ( i.hasNext() )
-            {
+            while (i.hasNext()) {
                 CaomRepoConfig.Item rci = i.next();
                 String sql = "SELECT obsID FROM " + rci.getTestTable() + " LIMIT 1";
                 CheckDataSource checkDataSource = new CheckDataSource(rci.getDataSourceName(), sql);
                 checkDataSource.check();
             }
-            
+
             // load this dynamically so that missing wcs won't break this class
-            try
-            {
+            try {
                 Class c = Class.forName("ca.nrc.cadc.caom2.repo.CheckWcsLib");
                 CheckResource wcs = (CheckResource) c.newInstance();
                 wcs.check();
-            }
-            catch(RuntimeException ex)
-            {
+            } catch (RuntimeException ex) {
                 throw new CheckException("wcslib not available", ex);
-            }
-            catch(Error er)
-            {
+            } catch (Error er) {
                 throw new CheckException("wcslib not available", er);
             }
-        }
-        catch(CheckException ce)
-        {
+        } catch (CheckException ce) {
             // tests determined that the resource is not working
             isGood = false;
             note = ce.getMessage();
-        }
-        catch (Throwable t)
-        {
+        } catch (Throwable t) {
             // the test itself failed
             isGood = false;
             note = "test failed, reason: " + t;
@@ -166,38 +164,37 @@ public class ServiceAvailabilityImpl implements WebService
         return new AvailabilityStatus(isGood, null, null, null, note);
     }
 
-    public void setState(String state)
-    {
+    @Override
+    public void setState(String state) {
         AccessControlContext acContext = AccessController.getContext();
         Subject subject = Subject.getSubject(acContext);
 
-        if (subject == null)
+        if (subject == null) {
             return;
+        }
 
         Principal caller = AuthenticationUtil.getX500Principal(subject);
-        if ( AuthenticationUtil.equals(TRUSTED, caller) )
-        {
-            String key = RepoAction.class.getName() + ".state";
-            if (RepoAction.OFFLINE.equals(state))
-                System.setProperty(key, RepoAction.OFFLINE);
-            else if (RepoAction.READ_ONLY.equals(state))
-                System.setProperty(key, RepoAction.READ_ONLY);
-            else if (RepoAction.READ_WRITE.equals(state))
-                System.setProperty(key, RepoAction.READ_WRITE);
-            log.info("WebService state changed to " + state + " by " + caller + " [OK]");
-        }
-        else
-        {
-            log.warn("WebService state change to " + state + " by " + caller + " [DENIED]");
+        if (AuthenticationUtil.equals(TRUSTED, caller)) {
+            String key = appName + RestAction.STATE_MODE_KEY;
+            if (RestAction.STATE_OFFLINE.equals(state)) {
+                System.setProperty(key, RestAction.STATE_OFFLINE);
+            } else if (RestAction.STATE_READ_ONLY.equals(state)) {
+                System.setProperty(key, RestAction.STATE_READ_ONLY);
+            } else if (RestAction.STATE_READ_WRITE.equals(state)) {
+                System.setProperty(key, RestAction.STATE_READ_WRITE);
+            }
+            log.info("WebService state changed: " + key + "=" + state + " by " + caller + " [OK]");
+        } else {
+            log.warn("WebService state change by " + caller + " [DENIED]");
         }
     }
 
-    private String getState()
-    {
-        String key = RepoAction.MODE_KEY;
+    private String getState() {
+        String key = appName + RestAction.STATE_MODE_KEY;
         String ret = System.getProperty(key);
-        if (ret == null)
-            return RepoAction.READ_WRITE;
+        if (ret == null) {
+            return RestAction.STATE_READ_WRITE;
+        }
         return ret;
     }
 }
