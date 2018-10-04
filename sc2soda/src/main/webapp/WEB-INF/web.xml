@@ -17,7 +17,7 @@
                 ca.nrc.cadc.sc2soda
                 ca.nrc.cadc.caom2ops
                 ca.nrc.cadc.caom2.soda
-                ca.nrc.cadc.caom2.util
+                ca.nrc.cadc.caom2.compute
                 ca.nrc.cadc.dali
                 ca.nrc.cadc.vosi
                 ca.nrc.cadc.uws
@@ -97,6 +97,15 @@
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
+    <servlet>
+        <load-on-startup>2</load-on-startup>
+        <servlet-name>SodaEchoServlet</servlet-name>
+        <servlet-class>ca.nrc.cadc.rest.RestServlet</servlet-class>
+        <init-param>
+            <param-name>get</param-name>
+            <param-value>ca.nrc.cadc.caom2.soda.EchoAction</param-value>
+        </init-param>
+    </servlet>
 
     <!-- URL-to-servlet mapping -->
     
@@ -133,6 +142,11 @@
     <servlet-mapping>
         <servlet-name>AsyncSodaServlet</servlet-name>
         <url-pattern>/auth-async</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SodaEchoServlet</servlet-name>
+        <url-pattern>/soda-echo/*</url-pattern>
     </servlet-mapping>
     
     <!-- security constraints -->
