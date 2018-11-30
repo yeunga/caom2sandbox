@@ -15,6 +15,7 @@
             <param-name>logLevelPackages</param-name>
             <param-value>
                 ca.nrc.cadc.sc2repo
+                ca.nrc.cadc.db.version
                 ca.nrc.cadc.rest
                 ca.nrc.cadc.caom2
                 ca.nrc.cadc.wcs
