@@ -18,7 +18,6 @@
       <param-value>
         ca.nrc.cadc.reg
         ca.nrc.cadc.rest
-        ca.nrc.cadc.log
         ca.nrc.cadc.uws
         ca.nrc.cadc.tap
         ca.nrc.cadc.sc2tap
@@ -40,36 +39,26 @@
 
   <servlet>
     <servlet-name>AsyncServlet</servlet-name>
-    <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
-
+    <servlet-class>ca.nrc.cadc.uws.server.JobServlet</servlet-class>
     <init-param>
-      <param-name>org.restlet.application</param-name>
-      <param-value>ca.nrc.cadc.uws.web.restlet.UWSAsyncApplication</param-value>
+        <param-name>get</param-name>
+        <param-value>ca.nrc.cadc.uws.web.GetAction</param-value>
     </init-param>
+    <init-param>
+        <param-name>post</param-name>
+        <param-value>ca.nrc.cadc.uws.web.PostAction</param-value>
+    </init-param>
+    <init-param>
+        <param-name>delete</param-name>
+        <param-value>ca.nrc.cadc.uws.web.DeleteAction</param-value>
+    </init-param>
+    
     <init-param>
       <param-name>ca.nrc.cadc.uws.server.JobManager</param-name>
       <param-value>ca.nrc.cadc.sc2tap.QueryJobManager</param-value>
     </init-param>
     <init-param>
-      <param-name>ca.nrc.cadc.uws.web.InlineContentHandler</param-name>
-      <param-value>ca.nrc.cadc.sc2tap.TempStorageManager</param-value>
-    </init-param>
-    <load-on-startup>2</load-on-startup>
-  </servlet>
-
-  <servlet>
-    <servlet-name>UpAsyncServlet</servlet-name>
-    <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
-    <init-param>
-      <param-name>org.restlet.application</param-name>
-      <param-value>ca.nrc.cadc.uws.web.restlet.UWSAsyncApplication</param-value>
-    </init-param>
-    <init-param>
-      <param-name>ca.nrc.cadc.uws.server.JobManager</param-name>
-      <param-value>ca.nrc.cadc.sc2tap.QueryJobManager</param-value>
-    </init-param>
-    <init-param>
-      <param-name>ca.nrc.cadc.uws.web.InlineContentHandler</param-name>
+      <param-name>ca.nrc.cadc.rest.InlineContentHandler</param-name>
       <param-value>ca.nrc.cadc.sc2tap.TempStorageManager</param-value>
     </init-param>
     <load-on-startup>2</load-on-startup>
@@ -77,21 +66,22 @@
 
   <servlet>
     <servlet-name>SyncServlet</servlet-name>
-    <servlet-class>ca.nrc.cadc.uws.server.SyncServlet</servlet-class>
+    <servlet-class>ca.nrc.cadc.uws.server.JobServlet</servlet-class>
     <init-param>
-      <param-name>ca.nrc.cadc.uws.server.SyncServlet.execOnGET</param-name>
-      <param-value>true</param-value>
+        <param-name>get</param-name>
+        <param-value>ca.nrc.cadc.uws.web.SyncGetAction</param-value>
     </init-param>
     <init-param>
-      <param-name>ca.nrc.cadc.uws.server.SyncServlet.execOnPOST</param-name>
-      <param-value>false</param-value>
+        <param-name>post</param-name>
+        <param-value>ca.nrc.cadc.uws.web.SyncPostAction</param-value>
     </init-param>
+    
     <init-param>
       <param-name>ca.nrc.cadc.uws.server.JobManager</param-name>
       <param-value>ca.nrc.cadc.sc2tap.QueryJobManager</param-value>
     </init-param>
     <init-param>
-      <param-name>ca.nrc.cadc.uws.web.InlineContentHandler</param-name>
+      <param-name>ca.nrc.cadc.rest.InlineContentHandler</param-name>
       <param-value>ca.nrc.cadc.sc2tap.TempStorageManager</param-value>
     </init-param>
     <load-on-startup>2</load-on-startup>
@@ -141,7 +131,7 @@
     <url-pattern>/async/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>UpAsyncServlet</servlet-name>
+    <servlet-name>AsyncServlet</servlet-name>
     <url-pattern>/auth-async/*</url-pattern>
   </servlet-mapping>
 
