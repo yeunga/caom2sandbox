@@ -36,14 +36,14 @@
     <servlet>
         <load-on-startup>2</load-on-startup>
         <servlet-name>SyncServlet</servlet-name>
-        <servlet-class>ca.nrc.cadc.uws.server.SyncServlet</servlet-class>
+        <servlet-class>ca.nrc.cadc.uws.server.JobServlet</servlet-class>
         <init-param>
-            <param-name>ca.nrc.cadc.uws.server.SyncServlet.execOnGET</param-name>
-            <param-value>true</param-value>
+            <param-name>get</param-name>
+            <param-value>ca.nrc.cadc.uws.web.SyncGetAction</param-value>
         </init-param>
         <init-param>
-            <param-name>ca.nrc.cadc.uws.server.SyncServlet.execOnPOST</param-name>
-            <param-value>false</param-value>
+            <param-name>post</param-name>
+            <param-value>ca.nrc.cadc.uws.web.SyncPostAction</param-value>
         </init-param>
         <init-param>
             <param-name>ca.nrc.cadc.uws.server.JobManager</param-name>
