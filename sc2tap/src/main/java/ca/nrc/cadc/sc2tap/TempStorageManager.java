@@ -76,7 +76,7 @@ import ca.nrc.cadc.uws.JobInfo;
 import ca.nrc.cadc.uws.Parameter;
 import ca.nrc.cadc.uws.server.RandomStringGenerator;
 import ca.nrc.cadc.uws.web.InlineContentException;
-import ca.nrc.cadc.uws.web.InlineContentHandler;
+import ca.nrc.cadc.uws.web.UWSInlineContentHandler;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -96,7 +96,7 @@ import org.apache.log4j.Logger;
  * 
  * @author pdowler
  */
-public class TempStorageManager implements ResultStore, InlineContentHandler
+public class TempStorageManager implements ResultStore, UWSInlineContentHandler
 {
     private static final Logger log = Logger.getLogger(TempStorageManager.class);
  
@@ -241,82 +241,10 @@ public class TempStorageManager implements ResultStore, InlineContentHandler
         }
     }
     
-    // cadc-uws-server InlineContentHandler implementation
-    private List<Parameter> params;
-    private Map<String, URL> map = new TreeMap<>();
+    // cadc-uws-server UWSInlineContentHandler implementation
     
     @Override
-    public void setParameterList(List<Parameter> params)
-    {
-        this.params = params;
-    }
-
-    @Override
-    public List<Parameter> getParameterList()
-    {
-        if (params == null)
-            params = new ArrayList<Parameter>();
-        
-        // rewrite an UPLOAD param values from param:inline-name
-        // to http urkl in temp storage
-        for (Parameter parameter : params)
-        {
-            if (parameter.getName().equals("UPLOAD"))
-            {
-                String upload = parameter.getValue();
-                if (upload == null || upload.trim().isEmpty())
-                    break;
-
-                StringBuilder sb = new StringBuilder();
-                String[] tables = upload.split(";");
-                for (String table : tables)
-                {
-                    if (table.isEmpty())
-                    {
-                        sb.append(";");
-                        continue;
-                    }
-                    String[] nameURI = table.split(",");
-                    if (nameURI.length == 1)
-                    {
-                        sb.append(table);
-                        sb.append(";");
-                        continue;
-                    }
-                    String[] paramURI = nameURI[1].split(":");
-                    if(paramURI.length == 2 && map.containsKey(paramURI[1]))
-                    {
-                        sb.append(nameURI[0]);
-                        sb.append(",");
-                        URL url = map.get(paramURI[1]);
-                        sb.append(url.toString());
-                        sb.append(";");
-                    }
-                    else
-                    {
-                        sb.append(table);
-                        sb.append(";");
-                    }
-                }
-                if (sb.length() > 0)
-                {
-                    if (sb.charAt(sb.length() - 1) == ';')
-                        sb.deleteCharAt(sb.length() - 1);
-                    parameter.setValue(sb.toString());
-                }
-            }
-        }
-        return params;
-    }
-
-    @Override
-    public JobInfo getJobInfo()
-    {
-        return null;
-    }
-
-    @Override
-    public URL accept(String name, String contentType, InputStream inputStream) 
+    public Content accept(String name, String contentType, InputStream inputStream) 
         throws InlineContentException, IOException
     {
         // store the file in tmp storage
@@ -344,11 +272,10 @@ public class TempStorageManager implements ResultStore, InlineContentHandler
         fos.flush();
         fos.close();
 
-        // Add the name and url to the map.
-        map.put(name, retURL);
-        log.debug("map.put[" + name + ", " + retURL + "]");
-        return retURL;
-
+        Content ret = new Content();
+        ret.name = UWSInlineContentHandler.CONTENT_PARAM_REPLACE;
+        ret.value = new UWSInlineContentHandler.ParameterReplacement("param:"+name, retURL.toExternalForm());
+        return ret;
     }
     
     private static String getRandomString()

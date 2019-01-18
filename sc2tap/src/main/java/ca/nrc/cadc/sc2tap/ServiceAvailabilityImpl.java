@@ -67,21 +67,20 @@
 
 package ca.nrc.cadc.sc2tap;
 
-import ca.nrc.cadc.auth.ACIdentityManager;
 import ca.nrc.cadc.auth.AuthMethod;
 import ca.nrc.cadc.auth.AuthenticatorImpl;
 import ca.nrc.cadc.reg.Standards;
 import ca.nrc.cadc.reg.client.RegistryClient;
 import ca.nrc.cadc.uws.server.RandomStringGenerator;
-import ca.nrc.cadc.uws.server.impl.PostgresJobPersistence;
+import ca.nrc.cadc.vosi.AvailabilityPlugin;
 import ca.nrc.cadc.vosi.AvailabilityStatus;
-import ca.nrc.cadc.vosi.WebService;
 import ca.nrc.cadc.vosi.avail.CheckCertificate;
 import ca.nrc.cadc.vosi.avail.CheckDataSource;
 import ca.nrc.cadc.vosi.avail.CheckException;
 import ca.nrc.cadc.vosi.avail.CheckResource;
 import ca.nrc.cadc.vosi.avail.CheckWebService;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import org.apache.log4j.Logger;
 
@@ -89,16 +88,22 @@ import org.apache.log4j.Logger;
  *
  * @author pdowler
  */
-public class ServiceAvailabilityImpl implements WebService {
+public class ServiceAvailabilityImpl implements AvailabilityPlugin {
 
     private static final Logger log = Logger.getLogger(ServiceAvailabilityImpl.class);
 
-    private String UWSDS_TEST = "select jobID from uws.Job limit 1";
-    private String TAPDS_TEST = "select schema_name from tap_schema.schemas11 where schema_name='caom2'";
+    private final String UWSDS_TEST = "select jobID from uws.Job limit 1";
+    private final String TAPDS_TEST = "select schema_name from tap_schema.schemas11 where schema_name='caom2'";
 
     public ServiceAvailabilityImpl() {
     }
 
+    @Override
+    public void setAppName(String string) {
+        // no-op
+    }
+
+    
     @Override
     public AvailabilityStatus getStatus() {
         boolean isGood = true;
@@ -125,7 +130,7 @@ public class ServiceAvailabilityImpl implements WebService {
             cr = new CheckDataSource("jdbc/tapuploadadm", uploadTest[1], false);
             cr.check();
 
-            // certificate need to store async results
+            // certificate need to call cred
             File cert = new File(System.getProperty("user.home") + "/.ssl/cadcproxy.pem");
             CheckCertificate checkCert = new CheckCertificate(cert);
             checkCert.check();
@@ -135,6 +140,25 @@ public class ServiceAvailabilityImpl implements WebService {
                     Standards.VOSI_AVAILABILITY, AuthMethod.ANON).toExternalForm();
             CheckWebService cws = new CheckWebService(vos);
             cws.check();
+            
+            String cred =  reg.getServiceURL(URI.create("ivo://cadc.nrc.ca/cred"),
+                    Standards.VOSI_AVAILABILITY, AuthMethod.ANON).toExternalForm();
+            cws = new CheckWebService(cred);
+            cws.check();
+            
+            // try to store a temp file (inline content or async result)
+            String fname = "availability-test.out";
+            TempStorageManager tsm = new TempStorageManager();
+            File tmp = tsm.getStoredFile(fname);
+            try {
+                if (tmp.exists()) {
+                    tmp.delete();
+                }
+                tmp.createNewFile();
+            } catch (IOException ex) {
+                throw new CheckException("CONFIG: cannot write temporary file " + tmp.getAbsolutePath(), ex);
+            }
+            
         } catch (CheckException ce) {
             // tests determined that the resource is not working
             isGood = false;

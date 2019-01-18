@@ -20,7 +20,6 @@
                 ca.nrc.cadc.caom2
                 ca.nrc.cadc.wcs
                 ca.nrc.cadc.vosi
-                ca.nrc.cadc.log
             </param-value>
         </init-param>
         <init-param>
