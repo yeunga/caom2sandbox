@@ -6,36 +6,36 @@
 
   <capability standardID="ivo://ivoa.net/std/VOSI#capabilities">
     <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="full">http://replace.me.com/sc2links/capabilities</accessURL>
+      <accessURL use="full">https://example.net/sc2links/capabilities</accessURL>
     </interface>
   </capability>
 
   <capability standardID="ivo://ivoa.net/std/VOSI#availability">
     <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="full">http://replace.me.com/sc2links/availability</accessURL>
+      <accessURL use="full">https://example.net/sc2links/availability</accessURL>
     </interface>
   </capability>
   
   <capability standardID="vos://cadc.nrc.ca~vospace/CADC/std/LOGGING#logControl-1.0">
     <interface xsi:type="vs:ParamHTTP" role="std" version="1.0">
-      <accessURL use="full">http://replace.me.com/sc2links/logControl</accessURL>     
+      <accessURL use="full">https://example.net/sc2links/logControl</accessURL>     
     </interface> 
   </capability> 
 
   <capability standardID="ivo://ivoa.net/std/DataLink#links-1.0">
     <interface xsi:type="vs:ParamHTTP" role="std">
-      <accessURL use="base">http://replace.me.com/sc2links/datalink</accessURL>
+      <accessURL use="base">https://example.net/sc2links/datalink</accessURL>
     </interface>
     <interface xsi:type="vs:ParamHTTP">
-      <accessURL use="base">http://replace.me.com/sc2links/auth-datalink</accessURL>
+      <accessURL use="base">https://example.net/sc2links/auth-datalink</accessURL>
       <securityMethod standardID="ivo://ivoa.net/sso#BasicAA"/>
     </interface>
     <interface xsi:type="vs:ParamHTTP">
-      <accessURL use="base">http://replace.me.com/sc2links/datalink</accessURL>
+      <accessURL use="base">https://example.net/sc2links/datalink</accessURL>
       <securityMethod standardID="ivo://ivoa.net/sso#cookie"/>
     </interface>
     <interface xsi:type="vs:ParamHTTP">
-      <accessURL use="base">https://replace.me.com/sc2links/datalink</accessURL>
+      <accessURL use="base">https://example.net/sc2links/datalink</accessURL>
       <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate"/>
     </interface>
   </capability>
