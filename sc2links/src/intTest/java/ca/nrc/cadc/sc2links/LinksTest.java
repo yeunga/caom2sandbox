@@ -119,8 +119,8 @@ public class LinksTest
     protected static final String INVALID_URI = "foo:bar";
     protected static final String NOTFOUND_URI = "caom:FOO/notSuchObservation/noSuchPlane";
 
-    protected static URL httpResourceURL;
-    protected static URL httpsResourceURL;
+    protected static URL anonURL;
+    protected static URL certURL;
 
     static
     {
@@ -146,10 +146,10 @@ public class LinksTest
 
         URI serviceID = new URI(TestUtil.DATALINK_SERVCIE_ID);
         RegistryClient rc = new RegistryClient();
-        httpResourceURL = rc.getServiceURL(serviceID, Standards.DATALINK_LINKS_10, AuthMethod.ANON);
-        httpsResourceURL = rc.getServiceURL(serviceID, Standards.DATALINK_LINKS_10, AuthMethod.CERT);
-        log.info("anon URL: " + httpResourceURL);
-        log.info("cert URL: " + httpsResourceURL);
+        anonURL = rc.getServiceURL(serviceID, Standards.DATALINK_LINKS_10, AuthMethod.ANON);
+        certURL = rc.getServiceURL(serviceID, Standards.DATALINK_LINKS_10, AuthMethod.CERT);
+        log.info("anon URL: " + anonURL);
+        log.info("cert URL: " + certURL);
     }
 
     @Test
@@ -161,7 +161,7 @@ public class LinksTest
             // POST the parameters.
             Map<String, Object> parameters = new HashMap<String, Object>();
             parameters.put("id", QUERY_URI1);
-            String resp = TestUtil.post(httpResourceURL, parameters, ManifestWriter.CONTENT_TYPE);
+            String resp = TestUtil.post(anonURL, parameters, ManifestWriter.CONTENT_TYPE);
             log.debug("response:\n" + resp);
             Assert.assertNotNull("non-null response", resp);
             Assert.assertFalse("non-empty response", resp.isEmpty());
@@ -180,31 +180,31 @@ public class LinksTest
     }
 
     @Test
-    public void testSinglePlaneURI_HTTP() throws Exception
+    public void testSinglePlaneURI_Anon() throws Exception
     {
-        log.debug("testSinglePlaneURI_HTTP");
-        doSingleURI(httpResourceURL, QUERY_URI1, "http");
+        log.debug("testSinglePlaneURI_Anon");
+        doSingleURI(anonURL, QUERY_URI1, "https");
     }
 
     @Test
-    public void testSinglePlaneURI_HTTPS() throws Exception
+    public void testSinglePlaneURI_Auth() throws Exception
     {
-        log.debug("testSinglePlaneURI_HTTPS");
-        doSingleURI(httpsResourceURL, QUERY_URI1, "https");
+        log.debug("testSinglePlaneURI_Auth");
+        doSingleURI(certURL, QUERY_URI1, "https");
     }
     
     @Test
-    public void testSinglePublisherID_HTTP() throws Exception
+    public void testSinglePublisherID_Anon() throws Exception
     {
-        log.debug("testSinglePublisherID_HTTP");
-        doSingleURI(httpResourceURL, QUERY_PUB1, "http");
+        log.debug("testSinglePublisherID_Anon");
+        doSingleURI(anonURL, QUERY_PUB1, "https");
     }
 
     @Test
-    public void testSinglePublisherID_HTTPS() throws Exception
+    public void testSinglePublisherID_Auth() throws Exception
     {
-        log.debug("testSinglePublisherID_HTTPS");
-        doSingleURI(httpsResourceURL, QUERY_PUB1, "https");
+        log.debug("testSinglePublisherID_Auth");
+        doSingleURI(certURL, QUERY_PUB1, "https");
     }
 
     private void doSingleURI(URL resourceURL, String uri, String expectedProtocol)
@@ -280,7 +280,7 @@ public class LinksTest
         try
         {
             // GET the query.
-            VOTableDocument getVotable = TestUtil.get(httpResourceURL, new String[] { "id="+QUERY_URI1, "id="+QUERY_URI2 });
+            VOTableDocument getVotable = TestUtil.get(anonURL, new String[] { "id="+QUERY_URI1, "id="+QUERY_URI2 });
             VOTableResource gvr = getVotable.getResourceByType("results");
             
             VOTableInfo queryStatus = null;
@@ -308,7 +308,7 @@ public class LinksTest
             parameters.put("REQUEST", "getLinks");
             parameters.put("id", QUERY_URI1);
             parameters.put("id", QUERY_URI2);
-            VOTableDocument postVotable = TestUtil.post(httpResourceURL, parameters);
+            VOTableDocument postVotable = TestUtil.post(anonURL, parameters);
             VOTableResource pvr = postVotable.getResourceByType("results");
             VOTableTable pvtab = pvr.getTable();
 
@@ -345,7 +345,7 @@ public class LinksTest
         try
         {
             // GET the query.
-            VOTableDocument getVotable = TestUtil.get(httpResourceURL, new String[] { }, 400);
+            VOTableDocument getVotable = TestUtil.get(anonURL, new String[] { }, 400);
             VOTableResource gvr = getVotable.getResourceByType("results");
             VOTableInfo queryStatus = null;
             for (VOTableInfo info : gvr.getInfos())
@@ -372,7 +372,7 @@ public class LinksTest
         try
         {
             // GET the query.
-            VOTableDocument getVotable = TestUtil.get(httpResourceURL, new String[] { "ID="+INVALID_URI }, 200);
+            VOTableDocument getVotable = TestUtil.get(anonURL, new String[] { "ID="+INVALID_URI }, 200);
             VOTableResource gvr = getVotable.getResourceByType("results");
             VOTableInfo queryStatus = null;
             for (VOTableInfo info : gvr.getInfos())
@@ -422,7 +422,7 @@ public class LinksTest
         try
         {
             // GET the query.
-            VOTableDocument getVotable = TestUtil.get(httpResourceURL, new String[] { "ID="+NOTFOUND_URI }, 200);
+            VOTableDocument getVotable = TestUtil.get(anonURL, new String[] { "ID="+NOTFOUND_URI }, 200);
             VOTableResource gvr = getVotable.getResourceByType("results");
             VOTableInfo queryStatus = null;
             for (VOTableInfo info : gvr.getInfos())
