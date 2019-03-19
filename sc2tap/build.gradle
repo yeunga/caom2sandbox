@@ -16,7 +16,7 @@ sourceCompatibility = 1.7
 
 group = 'ca.nrc.cadc'
 
-version = '1002'
+version = '1003'
 
 war {
     archiveName = project.name + '##' + project.version + '.war'
@@ -41,6 +41,7 @@ dependencies {
 
     testCompile 'junit:junit:4.+'
     
+    intTestCompile 'org.opencadc:cadc-tap:[1.0,)'
     intTestCompile 'org.opencadc:cadc-test-vosi:[1.0.4,)'
     intTestCompile 'org.opencadc:cadc-test-uws:[1.1.2,)'
     intTestCompile 'org.opencadc:cadc-test-tap:[1.1.2,)'

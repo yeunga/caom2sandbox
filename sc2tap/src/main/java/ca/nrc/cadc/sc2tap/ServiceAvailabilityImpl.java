@@ -124,10 +124,10 @@ public class ServiceAvailabilityImpl implements AvailabilityPlugin {
             // datasource names are the QueryRunner defaults
             String[] uploadTest = getTapUploadTest();
             // create table
-            cr = new CheckDataSource("jdbc/tapuploadadm", uploadTest[0], false);
+            cr = new CheckDataSource("jdbc/tapuser", uploadTest[0], false);
             cr.check();
             // drop table
-            cr = new CheckDataSource("jdbc/tapuploadadm", uploadTest[1], false);
+            cr = new CheckDataSource("jdbc/tapuser", uploadTest[1], false);
             cr.check();
 
             // certificate need to call cred

@@ -62,51 +62,39 @@
 *  <http://www.gnu.org/licenses/>.      pas le cas, consultez :
 *                                       <http://www.gnu.org/licenses/>.
 *
-*  $Revision: 6 $
-*
 ************************************************************************
 */
 
 package ca.nrc.cadc.sc2tap;
 
 
-import ca.nrc.cadc.auth.AuthMethod;
-import ca.nrc.cadc.reg.Capabilities;
-import ca.nrc.cadc.reg.Capability;
-import ca.nrc.cadc.reg.Interface;
-import ca.nrc.cadc.reg.Standards;
-import ca.nrc.cadc.vosi.CapabilitiesTest;
-import java.net.URI;
+import ca.nrc.cadc.db.DBUtil;
+import ca.nrc.cadc.tap.QueryRunner;
+import javax.sql.DataSource;
 import org.apache.log4j.Logger;
-import org.junit.Assert;
 
 /**
  *
  * @author pdowler
  */
-public class VosiCapabilitiesTest extends CapabilitiesTest
-{
-    private static final Logger log = Logger.getLogger(VosiCapabilitiesTest.class);
+public class QueryRunnerImpl extends QueryRunner {
+    private static final Logger log = Logger.getLogger(QueryRunnerImpl.class);
 
-    public VosiCapabilitiesTest() 
-    { 
-        super(URI.create("ivo://cadc.nrc.ca/sc2tap"));
+    public QueryRunnerImpl() { 
     }
     
     @Override
-    protected void validateContent(Capabilities caps) throws Exception {
-        super.validateContent(caps);
-        
-        // TAP-1.1
-        Capability tap = caps.findCapability(Standards.TAP_10);
-        Interface base = tap.findInterface(AuthMethod.ANON, Standards.INTERFACE_PARAM_HTTP);
-        Assert.assertNotNull("base", base);
-        Assert.assertTrue("anon base", base.getSecurityMethods().contains(Standards.SECURITY_METHOD_ANON));
-        Assert.assertTrue("cert base", base.getSecurityMethods().contains(Standards.SECURITY_METHOD_CERT));
-        Assert.assertTrue("cookie base", base.getSecurityMethods().contains(Standards.SECURITY_METHOD_COOKIE));
+    protected DataSource getUploadDataSource() throws Exception {
+        return getQueryDataSource();
+    }
 
-        Capability tables = caps.findCapability(Standards.VOSI_TABLES_11);
-        Assert.assertNotNull("tables", tables);
-        Assert.assertNotNull("anon tables", tables.findInterface(Standards.SECURITY_METHOD_ANON, Standards.INTERFACE_PARAM_HTTP));
+    @Override
+    protected DataSource getTapSchemaDataSource() throws Exception {
+        return getQueryDataSource();
+    }
+
+    @Override
+    protected DataSource getQueryDataSource() throws Exception {
+        return DBUtil.findJNDIDataSource("jdbc/tapuser");
     }
 }

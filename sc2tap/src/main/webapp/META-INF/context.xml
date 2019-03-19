@@ -3,17 +3,38 @@
 
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
 
-    <!-- development server -->
-    <ResourceLink name="jdbc/uws"
-        global="jdbc/sandbox-tapadm"
-        type="javax.sql.DataSource" />
-        
-    <ResourceLink name="jdbc/tapuser"
-        global="jdbc/sandbox-tapuser"
-        type="javax.sql.DataSource" />
-
-    <ResourceLink name="jdbc/tapuploadadm"
-        global="jdbc/sandbox-tapuser"
-        type="javax.sql.DataSource" />
+    <Resource name="jdbc/tapadm"
+        auth="Container"
+        type="javax.sql.DataSource"
+        factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" closeMethod="close"
+        minEvictableIdleTimeMillis="60000" timeBetweenEvictionRunsMillis="30000"
+        maxWait="20000"
+        initialSize="0"  minIdle="0" maxIdle="${sc2tap.tapadm.maxActive}" maxActive="${sc2tap.tapadm.maxActive}" 
+        username="${sc2tap.tapadm.username}" password="${sc2tap.tapadm.password}"
+        driverClassName="org.postgresql.Driver" url="${sc2tap.tapadm.url}"
+        removeAbandoned="false"
+        testWhileIdle="true" testOnBorrow="true" validationQuery="select 123" />
+    <Resource name="jdbc/uws"
+        auth="Container"
+        type="javax.sql.DataSource"
+        factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" closeMethod="close"
+        minEvictableIdleTimeMillis="60000" timeBetweenEvictionRunsMillis="30000"
+        maxWait="20000"
+        initialSize="0" minIdle="0" maxIdle="${sc2tap.uws.maxActive}" maxActive="${sc2tap.uws.maxActive}"
+        username="${sc2tap.uws.username}" password="${sc2tap.uws.password}"
+        driverClassName="org.postgresql.Driver" url="${sc2tap.uws.url}"
+        removeAbandoned="false"
+        testOnBorrow="true" validationQuery="select 123" />
+    <Resource name="jdbc/tapuser"
+        auth="Container"
+        type="javax.sql.DataSource"
+        factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" closeMethod="close"
+        minEvictableIdleTimeMillis="60000" timeBetweenEvictionRunsMillis="30000"
+        maxWait="20000"
+        initialSize="0" minIdle="0" maxIdle="${sc2tap.tapuser.maxActive}" maxActive="${sc2tap.tapuser.maxActive}"
+        username="${sc2tap.tapuser.username}" password="${sc2tap.tapuser.password}"
+        driverClassName="org.postgresql.Driver" url="${sc2tap.tapuser.url}"
+        removeAbandoned="false"
+        testOnBorrow="true" validationQuery="select 123" />
     
 </Context>

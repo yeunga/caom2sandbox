@@ -68,7 +68,6 @@
 package ca.nrc.cadc.sc2tap;
 
 import ca.nrc.cadc.auth.ACIdentityManager;
-import ca.nrc.cadc.tap.QueryRunner;
 import ca.nrc.cadc.uws.server.JobExecutor;
 import ca.nrc.cadc.uws.server.JobPersistence;
 import ca.nrc.cadc.uws.server.JobUpdater;
@@ -95,7 +94,7 @@ public class QueryJobManager extends SimpleJobManager
 
         // max threads: 6 == number of simultaneously running async queries (per
         // web server), plus sync queries, plus VOSI-tables queries
-        JobExecutor jobExec = new ThreadPoolExecutor(jobUpdater, QueryRunner.class, 6);
+        JobExecutor jobExec = new ThreadPoolExecutor(jobUpdater, QueryRunnerImpl.class, 6);
 
         super.setJobPersistence(jobPersist);
         super.setJobExecutor(jobExec);
