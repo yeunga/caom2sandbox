@@ -101,7 +101,9 @@ public class VosiCapabilitiesTest extends CapabilitiesTest {
             throws Exception {
         for (Capability c : caps.getCapabilities()) {
             for (Interface i : c.getInterfaces()) {
-                log.info(c.getStandardID() + " " + i.getSecurityMethod() + " -> " + i.getAccessURL().getURL());
+                for (URI sm : i.getSecurityMethods()) {
+                    log.info(c.getStandardID() + " " + sm + " -> " + i.getAccessURL().getURL());
+                }
             }
         }
         Assert.assertNotNull("availability", caps.findCapability(Standards.VOSI_AVAILABILITY));
