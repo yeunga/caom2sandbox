@@ -113,7 +113,7 @@
     <init-param>
       <description>
       </description>
-      <param-name>ca.nrc.cadc.vosi.WebService</param-name>
+      <param-name>ca.nrc.cadc.vosi.AvailabilityPlugin</param-name>
       <param-value>ca.nrc.cadc.sc2tap.ServiceAvailabilityImpl</param-value>
     </init-param>
     <load-on-startup>3</load-on-startup>
