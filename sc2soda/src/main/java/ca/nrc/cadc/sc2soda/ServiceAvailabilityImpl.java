@@ -105,8 +105,8 @@ public class ServiceAvailabilityImpl implements AvailabilityPlugin {
     }
 
     @Override
-    public void heartBeat() {
-        //no-op
+    public boolean heartbeat() {
+        return true;
     }
 
     public AvailabilityStatus getStatus() {

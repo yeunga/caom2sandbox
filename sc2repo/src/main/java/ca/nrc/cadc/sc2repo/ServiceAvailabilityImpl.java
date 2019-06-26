@@ -110,7 +110,8 @@ public class ServiceAvailabilityImpl implements AvailabilityPlugin {
     }
 
     @Override
-    public void heartBeat() {
+    public boolean heartbeat() {
+        return true;
     }
 
     public AvailabilityStatus getStatus() {
