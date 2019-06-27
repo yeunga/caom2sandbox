@@ -3,7 +3,7 @@
 *******************  CANADIAN ASTRONOMY DATA CENTRE  *******************
 **************  CENTRE CANADIEN DE DONNÉES ASTRONOMIQUES  **************
 *
-*  (c) 2011.                            (c) 2011.
+*  (c) 2019.                            (c) 2019.
 *  Government of Canada                 Gouvernement du Canada
 *  National Research Council            Conseil national de recherches
 *  Ottawa, Canada, K1A 0R6              Ottawa, Canada, K1A 0R6
@@ -72,8 +72,8 @@ package ca.nrc.cadc.sc2meta;
 import ca.nrc.cadc.auth.AuthMethod;
 import ca.nrc.cadc.reg.Standards;
 import ca.nrc.cadc.reg.client.RegistryClient;
+import ca.nrc.cadc.vosi.AvailabilityPlugin;
 import ca.nrc.cadc.vosi.AvailabilityStatus;
-import ca.nrc.cadc.vosi.WebService;
 import ca.nrc.cadc.vosi.avail.CheckDataSource;
 import ca.nrc.cadc.vosi.avail.CheckException;
 import ca.nrc.cadc.vosi.avail.CheckResource;
@@ -87,7 +87,7 @@ import java.net.URL;
  *
  * @author pdowler
  */
-public class ServiceAvailabilityImpl implements WebService
+public class ServiceAvailabilityImpl implements AvailabilityPlugin
 {
     private static final Logger log = Logger.getLogger(ServiceAvailabilityImpl.class);
 
@@ -97,6 +97,16 @@ public class ServiceAvailabilityImpl implements WebService
     private String UWSDS_TEST = "select jobID from uws.Job limit 1";
     
     public ServiceAvailabilityImpl() { }
+
+    @Override
+    public void setAppName(String appName) {
+        //no op
+    }
+
+    @Override
+    public boolean heartbeat() {
+        return true;
+    }
 
     public AvailabilityStatus getStatus()
     {
