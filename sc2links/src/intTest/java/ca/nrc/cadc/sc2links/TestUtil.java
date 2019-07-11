@@ -69,7 +69,6 @@
 
 package ca.nrc.cadc.sc2links;
 
-import ca.nrc.cadc.caom2.datalink.DataLink;
 import ca.nrc.cadc.dali.tables.TableData;
 import ca.nrc.cadc.dali.tables.votable.VOTableDocument;
 import ca.nrc.cadc.dali.tables.votable.VOTableField;
@@ -88,6 +87,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.opencadc.datalink.DataLink;
 
 /**
  *

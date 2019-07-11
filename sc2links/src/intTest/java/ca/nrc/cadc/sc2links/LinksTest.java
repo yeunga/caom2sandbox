@@ -66,11 +66,11 @@
 *
 ************************************************************************
 */
+
 package ca.nrc.cadc.sc2links;
 
 import ca.nrc.cadc.auth.AuthMethod;
 import ca.nrc.cadc.auth.SSLUtil;
-import ca.nrc.cadc.caom2.datalink.ManifestWriter;
 import ca.nrc.cadc.dali.tables.TableData;
 import ca.nrc.cadc.dali.tables.votable.VOTableDocument;
 import ca.nrc.cadc.dali.tables.votable.VOTableField;
@@ -93,6 +93,7 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.opencadc.datalink.server.ManifestWriter;
 
 /**
  *
@@ -345,7 +346,7 @@ public class LinksTest
         try
         {
             // GET the query.
-            VOTableDocument getVotable = TestUtil.get(anonURL, new String[] { }, 400);
+            VOTableDocument getVotable = TestUtil.get(anonURL, new String[] { }, 200);
             VOTableResource gvr = getVotable.getResourceByType("results");
             VOTableInfo queryStatus = null;
             for (VOTableInfo info : gvr.getInfos())
@@ -354,9 +355,10 @@ public class LinksTest
                     queryStatus = info;
             }
             Assert.assertNotNull("queryStatus", queryStatus);
-            Assert.assertEquals("ERROR", queryStatus.getValue());
-            Assert.assertNotNull(queryStatus.content);
-            Assert.assertTrue(queryStatus.content.startsWith("UsageFault"));
+            Assert.assertEquals("OK", queryStatus.getValue());
+            
+            // no rows
+            Assert.assertFalse("no rows", gvr.getTable().getTableData().iterator().hasNext());
         }
         catch(Exception unexpected)
         {

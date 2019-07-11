@@ -70,7 +70,7 @@
 package ca.nrc.cadc.sc2links;
 
 import ca.nrc.cadc.auth.ACIdentityManager;
-import ca.nrc.cadc.caom2.datalink.LinkQueryRunner;
+import ca.nrc.cadc.caom2.datalink.CaomLinkQueryRunner;
 import ca.nrc.cadc.uws.server.JobExecutor;
 import ca.nrc.cadc.uws.server.SimpleJobManager;
 import ca.nrc.cadc.uws.server.SyncJobExecutor;
@@ -95,7 +95,7 @@ public class LinkQueryJobManager extends SimpleJobManager
         
         PostgresJobPersistence jobPersist = new PostgresJobPersistence(new ACIdentityManager());
         
-        JobExecutor jobExec = new SyncJobExecutor(jobPersist, LinkQueryRunner.class);
+        JobExecutor jobExec = new SyncJobExecutor(jobPersist, CaomLinkQueryRunner.class);
 
         super.setJobPersistence(jobPersist);
         super.setJobExecutor(jobExec);
