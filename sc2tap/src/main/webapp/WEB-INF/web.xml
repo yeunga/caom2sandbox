@@ -120,8 +120,12 @@
   </servlet>
 
   <servlet>
-    <servlet-name>TableServlet</servlet-name>
-    <servlet-class>ca.nrc.cadc.tap.impl.CaomTableServlet</servlet-class>
+        <servlet-name>TableServlet</servlet-name>
+        <servlet-class>ca.nrc.cadc.rest.RestServlet</servlet-class>
+        <init-param>
+            <param-name>get</param-name>
+            <param-value>ca.nrc.cadc.vosi.actions.GetAction</param-value>
+        </init-param>
     <load-on-startup>3</load-on-startup>
   </servlet>
 

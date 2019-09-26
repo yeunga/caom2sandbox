@@ -70,6 +70,7 @@
 package ca.nrc.cadc.sc2tap;
 
 import ca.nrc.cadc.auth.AuthMethod;
+import ca.nrc.cadc.auth.AuthenticationUtil;
 import ca.nrc.cadc.auth.RunnableAction;
 import ca.nrc.cadc.auth.SSLUtil;
 import ca.nrc.cadc.net.HttpDownload;
@@ -78,13 +79,18 @@ import ca.nrc.cadc.reg.Standards;
 import ca.nrc.cadc.reg.client.RegistryClient;
 import ca.nrc.cadc.util.FileUtil;
 import ca.nrc.cadc.util.Log4jInit;
+import ca.nrc.cadc.uws.Job;
+import ca.nrc.cadc.uws.JobReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.security.PrivilegedExceptionAction;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.security.auth.Subject;
+import javax.security.auth.x500.X500Principal;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -104,6 +110,8 @@ public class RegistryClientLookupTest {
 
     static {
         Log4jInit.setLevel("ca.nrc.cadc.tap.integration", Level.INFO);
+        //Log4jInit.setLevel("ca.nrc.cadc.net", Level.DEBUG);
+        //Log4jInit.setLevel("ca.nrc.cadc.uws", Level.DEBUG);
     }
 
     Subject subject;
@@ -217,7 +225,16 @@ public class RegistryClientLookupTest {
             Assert.assertEquals(303, post.getResponseCode());
             Assert.assertNotNull(post.getRedirectURL());
 
-            // TODO: get job and verify ownerID
+            URL jobURL = post.getRedirectURL();
+            Job j = Subject.doAs(subject, new GetJobAction(jobURL));
+            Assert.assertNotNull(j);
+            Assert.assertNotNull(j.getOwnerID());
+            // assume X500 DN output
+            X500Principal expectedOwner = subject.getPrincipals(X500Principal.class).iterator().next(); // ugh
+            X500Principal actualOwner = new X500Principal(j.getOwnerID());
+            
+            Assert.assertTrue("ownerID match", AuthenticationUtil.equals(expectedOwner, actualOwner));
+            
         } catch (Exception unexpected) {
             log.error("unexpected exception", unexpected);
             Assert.fail("unexpected exception: " + unexpected);
@@ -236,10 +253,42 @@ public class RegistryClientLookupTest {
             Assert.assertEquals(303, post.getResponseCode());
             Assert.assertNotNull(post.getRedirectURL());
 
-            //  TODO: get job and verify ownerID
+            // uws SyncPostAction: assumed PRG config and behaviour
+            URL jobURL = new URL(post.getRedirectURL().toExternalForm().replace("/run", ""));
+            Job j = Subject.doAs(subject, new GetJobAction(jobURL));
+            Assert.assertNotNull(j);
+            Assert.assertNotNull(j.getOwnerID());
+            // assume X500 DN output
+            X500Principal expectedOwner = subject.getPrincipals(X500Principal.class).iterator().next(); // ugh
+            X500Principal actualOwner = new X500Principal(j.getOwnerID());
+            
+            Assert.assertTrue("ownerID match", AuthenticationUtil.equals(expectedOwner, actualOwner));
+            
         } catch (Exception unexpected) {
             log.error("unexpected exception", unexpected);
             Assert.fail("unexpected exception: " + unexpected);
         }
+    }
+    
+    private static class GetJobAction implements PrivilegedExceptionAction<Job> {
+
+        URL jobURL;
+        
+        GetJobAction(URL jobURL) {
+            this.jobURL = jobURL;
+        }
+        
+        @Override
+        public Job run() throws Exception {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            HttpDownload get = new HttpDownload(jobURL, bos);
+            get.run();
+            if (get.getThrowable() != null) {
+                throw new RuntimeException("failed: GET " + jobURL, get.getThrowable());
+            }
+            JobReader jr = new JobReader();
+            return jr.read(new ByteArrayInputStream(bos.toByteArray()));
+        }
+        
     }
 }

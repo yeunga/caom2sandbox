@@ -108,7 +108,7 @@ public class TempStorageManager implements ResultStore, UWSInlineContentHandler
     private String contentType;
     private String filename;
     
-    private String baseDir;
+    private File baseDir;
     private String baseURL;
     
     public TempStorageManager() 
@@ -121,7 +121,7 @@ public class TempStorageManager implements ResultStore, UWSInlineContentHandler
             props.load(url.openStream());
             for (String s : props.stringPropertyNames())
                 log.debug("props: " + s + "=" + props.getProperty(s));
-            this.baseDir = props.getProperty(BASE_DIR_KEY);
+            this.baseDir = new File(props.getProperty(BASE_DIR_KEY));
             this.baseURL = props.getProperty(BASE_URL_KEY);
         }
         catch(Exception ex)
@@ -139,7 +139,7 @@ public class TempStorageManager implements ResultStore, UWSInlineContentHandler
     // used by TempStorageGetAction
     File getStoredFile(String filename)
     {
-        return new File(baseDir + "/" + filename);
+        return getDestFile(filename);
     }
 
     // cadc-tap-server ResultStore implementation
@@ -210,7 +210,12 @@ public class TempStorageManager implements ResultStore, UWSInlineContentHandler
     
     private File getDestFile(String filename)
     {
-        File dir = new File(baseDir);
+        if (!baseDir.exists()) {
+            log.debug("create baseDir: " + baseDir);
+            baseDir.mkdir();
+        }
+        
+        File dir = baseDir;
         if (!dir.exists())
             throw new RuntimeException(BASE_DIR_KEY + "=" + baseDir + " does not exist");
         if (!dir.isDirectory())
