@@ -3,8 +3,16 @@
 
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
 
-    <ResourceLink name="jdbc/uws"
-        global="jdbc/sandbox-tapadm"
-        type="javax.sql.DataSource" />
+    <Resource name="jdbc/uws"
+        auth="Container"
+        type="javax.sql.DataSource"
+        factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" closeMethod="close"
+        minEvictableIdleTimeMillis="60000" timeBetweenEvictionRunsMillis="30000"
+        maxWait="20000"
+        initialSize="0" minIdle="0" maxIdle="${sc2links.uws.maxActive}" maxActive="${sc2links.uws.maxActive}"
+        username="${sc2links.uws.username}" password="${sc2links.uws.password}"
+        driverClassName="org.postgresql.Driver" url="${sc2links.uws.url}"
+        removeAbandoned="false"
+        testOnBorrow="true" validationQuery="select 123" />
 
 </Context>
