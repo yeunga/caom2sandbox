@@ -28,8 +28,8 @@ dependencies {
 
     compile 'org.opencadc:cadc-util:[1.2.3,)'
     runtime 'org.opencadc:cadc-log:[1.0.1,)'
-    compile 'org.opencadc:caom2persistence:[2.3.33,2.4)'
-    compile 'org.opencadc:caom2-repo-server:[2.3.21,2.4)'
+    compile 'org.opencadc:caom2persistence:[2.4.0,2.5)'
+    compile 'org.opencadc:caom2-repo-server:[2.4.0,2.5)'
     compile 'org.opencadc:cadc-access-control:[1.1.2,2.0)'
     compile 'org.opencadc:cadc-access-control-identity:[1.0,2.0)'
     compile 'org.opencadc:cadc-vosi:[1.0.1,2.0)'
@@ -37,7 +37,7 @@ dependencies {
     testCompile 'junit:junit:[4.0,)'
 
     intTestCompile 'org.opencadc:cadc-test-vosi:[1.0.1,)'
-    intTestCompile 'org.opencadc:caom2-test-repo:[1.0.18,)'
+    intTestCompile 'org.opencadc:caom2-test-repo:[1.1.0,)'
 }
 
 configurations {
