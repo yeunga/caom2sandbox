@@ -20,19 +20,28 @@ version = '1001'
 
 war {
     archiveName = project.name + '##' + project.version + '.war'
+    
+    // include the swagger-ui
+    from(System.getenv('RPS') + '/resources/') {
+        include 'swagger-ui/'
+    }
 }
 
 dependencies {
     compile 'log4j:log4j:[1.2.0,)'
     providedCompile 'javax.servlet:javax.servlet-api:[3.1.0,)'
 
-    compile 'org.opencadc:cadc-util:[1.2.3,)'
+    compile 'org.opencadc:cadc-util:[1.2.29,)'
     runtime 'org.opencadc:cadc-log:[1.0.1,)'
-    compile 'org.opencadc:caom2persistence:[2.4.0,2.5)'
-    compile 'org.opencadc:caom2-repo-server:[2.4.0,2.5)'
+    compile 'org.opencadc:caom2:[2.4.1,2.5)'
+    compile 'org.opencadc:caom2-compute:[2.4.0,2.5)'
+    compile 'org.opencadc:caom2persistence:[2.4.1,2.5)'
+    compile 'org.opencadc:caom2-repo-server:[2.4.1,2.5)'
     compile 'org.opencadc:cadc-access-control:[1.1.2,2.0)'
     compile 'org.opencadc:cadc-access-control-identity:[1.0,2.0)'
     compile 'org.opencadc:cadc-vosi:[1.0.1,2.0)'
+    
+    runtime 'org.opencadc:caom2-access-control:[2.4.1,2.5)'
 
     testCompile 'junit:junit:[4.0,)'
 

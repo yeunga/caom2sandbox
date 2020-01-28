@@ -168,6 +168,7 @@
             <web-resource-name>auth</web-resource-name>
             <description/>
             <url-pattern>/auth-observations/*</url-pattern>
+            <url-pattern>/auth-observations23/*</url-pattern>
             <url-pattern>/auth-deletions/*</url-pattern>
             <url-pattern>/logControl/*</url-pattern>
             <http-method>GET</http-method>
