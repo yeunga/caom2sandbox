@@ -34,7 +34,7 @@ dependencies {
     compile 'org.opencadc:cadc-util:[1.2.29,)'
     runtime 'org.opencadc:cadc-log:[1.0.1,)'
     compile 'org.opencadc:caom2:[2.4.1,2.5)'
-    compile 'org.opencadc:caom2-compute:[2.4.0,2.5)'
+    compile 'org.opencadc:caom2-compute:[2.4.2,2.5)'
     compile 'org.opencadc:caom2persistence:[2.4.1,2.5)'
     compile 'org.opencadc:caom2-repo-server:[2.4.1,2.5)'
     compile 'org.opencadc:cadc-access-control:[1.1.2,2.0)'
