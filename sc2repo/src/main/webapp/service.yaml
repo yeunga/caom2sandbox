@@ -14,7 +14,6 @@ info:
     password (HTTP Basic Auth), users must prepend "auth-" to endpoint name
     (e.g. /sc2repo/auth-observations/{collection} for list observations in a collection).
     
-host: sc2.canfar.net
 schemes:
   - https
 basePath: '/sc2repo,'
